@@ -316,8 +316,8 @@
                             { "data": "status" },
                             { "data": null, "render": function(data, type, row){
                                 
-                                    var btnEdit    = '<button class="btn btn-primary btn-sm updateProduct" type="button" id="btnUpdate" data-acao="update" data-codigo=' + data.codigo + ' data-desc="' + data.descricao + '" data-codcat=' + data.codigo_categoria + ' data-nomcat="' + data.categoria + '" data-nomforn="'+ data.fornecedor +'" data-codforn=' + data.codigo_fornecedor + ' data-status=' + data.status + ' data-vlrCusto=' + data.preco_custo + ' data-vlrVenda=' + data.preco_venda +'><i class="fa fa-paste"></i> Alterar</button>';
-                                    var btnDisable = '<button class="btn btn-danger btn-sm disableProduct" type="button" id="btnDisable" data-acao="disable" data-codigo=' + data.codigo + '><i class="fa fa-times"></i> Desabilitar</button></div>';
+                                    var btnEdit    = '<div><button class="btn btn-primary btn-sm updateProduct" type="button" id="btnUpdate" data-acao="update" data-codigo=' + data.codigo + ' data-desc="' + data.descricao + '" data-codcat=' + data.codigo_categoria + ' data-nomcat="' + data.categoria + '" data-nomforn="'+ data.fornecedor +'" data-codforn=' + data.codigo_fornecedor + ' data-status=' + data.status + ' data-vlrCusto=' + data.preco_custo + ' data-vlrVenda=' + data.preco_venda +'><i class="fa fa-paste"></i> Alterar</button>';
+                                    var btnDisable = '<button class="btn btn-danger btn-sm disableProduct" type="button" id="btnDisable" data-acao="disable" data-codigo=' + data.codigo + '><i class="fa fa-times"></i> Desabilitar</button>';
                                     var btnEnable  = '<button class="btn btn-success btn-sm enableProduct" type="button" id="btnEnable" data-acao="enable" data-codigo=' + data.codigo + '><i class="fa fa-times"></i> Habilitar</button></div>';
 
                                     return btnEdit + '&nbsp&nbsp&nbsp&nbsp' + 

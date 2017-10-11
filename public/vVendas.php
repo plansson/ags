@@ -214,7 +214,7 @@
 	                    </div>
 	                </div>
                     <div class="row">   
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <div class="form-group">
                                 <label class="control-label">Forma de Pagamento:</label>
                                 <div>
@@ -225,7 +225,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2 col-sm-offset-1">
+                        <div class="col-sm-2">
                             <div class="form-group">
                                 <label class="control-label">Parcelas:</label>
                                 <div>
@@ -244,6 +244,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-sm-2">
+                            <div class="form-group">
+                                    <label class="control-label">Data da 1ª Parcela:</label>
+                                    <div>
+                                        <input type="date" name="dtParcela" id="dtParcela" class="form-control input-sm" style="size: 10px">
+                                    </div>
+                            </div>
+                        </div>
                     </div>
 	                <div class="row">	
 	                	<div class="col-sm-6">        
@@ -253,37 +261,36 @@
 	                            </div>
 	                    </div>
 	                </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th width="14%">Código</th>
-                                <th width="50%">Descrição</th>
-                                <th width="6%">Quantidade</th>
-                                <th width="10%">Valor</th>
-                                <th width="10%">Desconto</th>
-                                <th width="10%">Subtotal</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><input type="text" name="codProdTxt" id="codProdTxt" placeholder="Código" class="form-control input-sm"></td>
-                                <td><input type="text" name="descProdTxt" id="descProdTxt" placeholder="Descição do Produto" class="form-control input-sm" readonly="readonly"></td>
-                                <td><input type="text" name="numQuantidade" id="numQuantidade" placeholder="" class="form-control input-sm"></td>
-                                <td><input type="text" name="valorVenda" id="valorVenda" placeholder="" class="form-control input-sm"></td>
-                                <td><input type="text" name="valorDesconto" id="valorDesconto" placeholder="" class="form-control input-sm"></td>
-                                <td><input type="text" name="valorSubtotal" id="valorSubtotal" placeholder="" class="form-control input-sm" readonly="readonly"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="text" name="codProdTxt" id="codProdTxt" placeholder="Código" class="form-control input-sm"></td>
-                                <td><input type="text" name="descProdTxt" id="descProdTxt" placeholder="Descição do Produto" class="form-control input-sm" readonly="readonly"></td>
-                                <td><input type="text" name="numQuantidade" id="numQuantidade" placeholder="" class="form-control input-sm"></td>
-                                <td><input type="text" name="valorVenda" id="valorVenda" placeholder="" class="form-control input-sm"></td>
-                                <td><input type="text" name="valorDesconto" id="valorDesconto" placeholder="" class="form-control input-sm"></td>
-                                <td><input type="text" name="valorSubtotal" id="valorSubtotal" placeholder="" class="form-control input-sm" readonly="readonly"></td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <button class="btn btn-default btn-sm" type="button" id="btnAdicionaLinha"></i> Adicionar Produto</button>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table id="tblVenda" class="table table-striped table-bordered table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="14%">Código</th>
+                                    <th width="40%">Descrição</th>
+                                    <th width="6%">Quantidade</th>
+                                    <th width="10%">Valor</th>
+                                    <th width="10%">Desconto</th>
+                                    <th width="10%">Subtotal</th>
+                                    <th width="10%">Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><input type="text" name="codProdTxt" id="codProdTxt" placeholder="Código" class="form-control input-sm"></td>
+                                    <td><input type="text" name="descProdTxt" id="descProdTxt" placeholder="Descição do Produto" class="form-control input-sm" readonly="readonly"></td>
+                                    <td><input type="text" name="numQuantidade" id="numQuantidade" placeholder="" class="form-control input-sm"></td>
+                                    <td><input type="text" name="valorVenda" id="valorVenda" placeholder="" class="form-control input-sm" readonly="readonly"></td>
+                                    <td><input type="text" name="valorDesconto" id="valorDesconto" placeholder="" class="form-control input-sm"></td>
+                                    <td><input type="text" name="valorSubtotal" id="valorSubtotal" placeholder="" class="form-control input-sm" readonly="readonly"></td>
+                                    <td><button class="btn btn-danger btn-sm" type="button" id="btnRemoveLinha"></i> X</button></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                 </form>                
@@ -320,6 +327,9 @@
 
     <!-- Typehead -->
     <script src="js/plugins/typehead/bootstrap3-typeahead.min.js"></script>
+
+    <!-- Typehead -->
+    <script src="js/plugins/priceformat/jquery.priceformat.min.js"></script>
 
     <!-- Page-Level Scripts -->
     <script>
@@ -378,22 +388,38 @@
                 return n.replace('.', ',').replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
             }
 
-            $('input[name="codProdTxt"').each(function(){
 
-                alert($(this).val());
+            $('#insertModalVenda tbody #numQuantidade').on('change', function(e){
 
+                    $row = $(this).closest('tr');
+
+                    var vQuantidade = $row.find('#numQuantidade').val();
+                    var vValorVenda = $row.find('#valorVenda').val();
+                    console.log(vQuantidade);
+                    console.log(vValorVenda);
+                    var vSubtotal = vValorVenda * vQuantidade;
+                    
+                    $row.find('#valorSubtotal').val(vSubtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
 
 
             });
 
-            $('#insertModalVenda tbody #codProdTxt').on('change', function(e){
+            $('#insertModalVenda tbody #valorDesconto').on('change', function(e){
 
+                    $row = $(this).closest('tr');
+
+                    var vQuantidade = $row.find('#numQuantidade').val();
+                    var vValorVenda = $row.find('#valorVenda').val();
+                    var vDescconto  = $row.find('#valorDesconto').val();
+                    var vSubtotal = (vValorVenda) * (vQuantidade) - (vDescconto);
+                    
+                    $row.find('#valorSubtotal').val(vSubtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
 
 
             });
 
 
-            $('#insertModalVenda tbody #codProdTxt').on('change', function(e){
+            $(document).on('change', '#insertModalVenda tbody #codProdTxt', function(e){
                 e.preventDefault();
 
                 if($(this).val()){
@@ -414,13 +440,11 @@
                                 var vQuantidade = 1;
                                 $row.find('#numQuantidade').val(vQuantidade);
                                 var vValorVenda = val.preco_venda;
-                                $row.find('#valorVenda').val(formataDinheiro(vValorVenda));
+                                $row.find('#valorVenda').val(vValorVenda.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
                                 var vValorDesconto = 0;
-                                $row.find('#valorDesconto').val(formataDinheiro(vValorDesconto.toFixed(2)));
-                                console.log(vValorVenda * vQuantidade);
+                                $row.find('#valorDesconto').val(vValorDesconto.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
                                 var vSubtotal = vValorVenda * vQuantidade;
-                                console.log(vSubtotal);
-                                $row.find('#valorSubtotal').val(formataDinheiro(vSubtotal.toFixed(2)));
+                                $row.find('#valorSubtotal').val(vSubtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
 
                             });
                         } else if (result.total == 0) {
@@ -441,6 +465,34 @@
                     });
                 }
 
+
+            });
+
+            $(document).on('click', '#insertModalVenda tbody #btnRemoveLinha', function (e) {
+
+                    e.preventDefault();
+                    
+                    if($("#insertModalVenda tbody tr").length > 1) {
+                        $row = $(this).closest('tr');
+                        $row.remove();
+                    }
+
+
+            });
+
+            $('#insertModalVenda #btnAdicionaLinha').on('click', function(e){
+
+                var vLinha = '<tr>';
+                    vLinha = vLinha + '<td><input type="text" name="codProdTxt" id="codProdTxt" placeholder="Código" class="form-control input-sm"></td>'
+                    vLinha = vLinha + '<td><input type="text" name="descProdTxt" id="descProdTxt" placeholder="Descição do Produto" class="form-control input-sm" readonly="readonly"></td>'
+                    vLinha = vLinha + '<td><input type="text" name="numQuantidade" id="numQuantidade" placeholder="" class="form-control input-sm"></td>'
+                    vLinha = vLinha + '<td><input type="text" name="valorVenda" id="valorVenda" placeholder="" class="form-control input-sm" readonly="readonly"></td>'
+                    vLinha = vLinha + '<td><input type="text" name="valorDesconto" id="valorDesconto" placeholder="" class="form-control input-sm"></td>'
+                    vLinha = vLinha + '<td><input type="text" name="valorSubtotal" id="valorSubtotal" placeholder="" class="form-control input-sm" readonly="readonly"></td>'
+                    vLinha = vLinha + '<td><button class="btn btn-danger btn-sm" type="button" id="btnRemoveLinha"></i> X</button></td>'
+                    vLinha = vLinha + '</tr>';
+
+                $('#insertModalVenda #tblVenda tbody').append(vLinha);
 
             });
 
