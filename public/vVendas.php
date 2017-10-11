@@ -336,6 +336,10 @@
         $(document).ready(function(){
 
             $('#insertModalVenda').modal('show');
+
+            $('#insertModalVenda').on('show.bs.modal', function(){
+                alert("Entrou no Modal");
+            });
      	
             var Table = $('.dataTables-example').DataTable({
             	"bDestroy": true,
