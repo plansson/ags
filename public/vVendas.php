@@ -43,7 +43,7 @@
 
         #insertModalVenda .modal-dialog {
             /* 80% of window height */
-            width: 70%;
+            width: 80%;
         }
 
     </style>
@@ -160,18 +160,22 @@
     		                    <thead>
     		                    	<tr>
     				                	<th nowrap="nowrap" width="5%"><center>CÓDIGO</center></th>
-    				                	<th nowrap="nowrap" width="55%"><center>CLIENTE</center></th>
-    				                	<th nowrap="nowrap" width="5%"><center>PAGAMENTO</center></th>
-                                        <th nowrap="nowrap" width="5%"><center>VALOR</center></th>
-    				                	<th nowrap="nowrap" width="35%"><center>AÇÕES</center></th>
+    				                	<th nowrap="nowrap" width="10%"><center>DATA</center></th>
+    				                	<th nowrap="nowrap" width="40%"><center>CLIENTE</center></th>
+                                        <th nowrap="nowrap" width="5%"><center>VALOR ORIGINAL</center></th>
+                                        <th nowrap="nowrap" width="5%"><center>VALOR DESCONTO</center></th>
+                                        <th nowrap="nowrap" width="5%"><center>VALOR TOTAL</center></th>
+    				                	<th nowrap="nowrap" width="45%"><center>AÇÕES</center></th>
     				            	</tr>
     		                    </thead>
     		                    <tfoot>
     		                    	<tr>
     				                	<th nowrap="nowrap" width="5%"><center>CÓDIGO</center></th>
-                                        <th nowrap="nowrap" width="55%"><center>CLIENTE</center></th>
-                                        <th nowrap="nowrap" width="5%"><center>PAGAMENTO</center></th>
-                                        <th nowrap="nowrap" width="5%"><center>VALOR</center></th>
+                                        <th nowrap="nowrap" width="10%"><center>DATA</center></th>
+                                        <th nowrap="nowrap" width="50%"><center>CLIENTE</center></th>
+                                        <th nowrap="nowrap" width="5%"><center>VALOR ORIGINAL</center></th>
+                                        <th nowrap="nowrap" width="5%"><center>VALOR DESCONTO</center></th>
+                                        <th nowrap="nowrap" width="5%"><center>VALOR TOTAL</center></th>
                                         <th nowrap="nowrap" width="35%"><center>AÇÕES</center></th>
     				            	</tr>
     		                    </tfoot>
@@ -268,15 +272,15 @@
                         <div class="table-responsive">
                             <table id="tblVenda" class="table table-striped table-bordered table-hover">
                                 <thead>
-                                <tr>
-                                    <th width="14%">Código</th>
-                                    <th width="40%">Descrição</th>
-                                    <th width="6%">Quantidade</th>
-                                    <th width="10%">Valor</th>
-                                    <th width="10%">Desconto</th>
-                                    <th width="10%">Subtotal</th>
-                                    <th width="10%">Ações</th>
-                                </tr>
+                                    <tr>
+                                        <th width="14%">Código</th>
+                                        <th width="40%">Descrição</th>
+                                        <th width="6%">Quantidade</th>
+                                        <th width="10%">Valor</th>
+                                        <th width="10%">Desconto</th>
+                                        <th width="10%">Subtotal</th>
+                                        <th width="10%">Ações</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
@@ -286,9 +290,17 @@
                                     <td><input type="text" name="valorVenda" id="valorVenda" placeholder="" class="form-control input-sm" readonly="readonly"></td>
                                     <td><input type="text" name="valorDesconto" id="valorDesconto" placeholder="" class="form-control input-sm"></td>
                                     <td><input type="text" name="valorSubtotal" id="valorSubtotal" placeholder="" class="form-control input-sm" readonly="readonly"></td>
-                                    <td><button class="btn btn-danger btn-sm" type="button" id="btnRemoveLinha"></i> X</button></td>
+                                    <td align="center"><button class="btn btn-danger btn-sm" type="button" id="btnRemoveLinha"><i class="fa fa-trash"></i></button></td>
                                 </tr>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3">Total: </th>
+                                        <th width="10%"><input type="text" name="totalOriginal" id="totalOriginal" placeholder="" class="form-control input-sm" readonly="readonly"></th>
+                                        <th width="10%"><input type="text" name="totalDesconto" id="totalDesconto" placeholder="" class="form-control input-sm" readonly="readonly"></th>
+                                        <th width="10%"><input type="text" name="totalSubTotal" id="totalSubTotal" placeholder="" class="form-control input-sm" readonly="readonly"></th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -297,8 +309,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" data-dismiss="modal">Sair</button>
-                <button type="button" id="insertCategory" class="btn btn-primary insertCategory" data-acao="insert">Salvar</button>
-                <button type="button" id="updateCategory" class="btn btn-primary updateCategory" data-acao="update">Alterar</button>
+                <button type="button" id="insertVenda" class="btn btn-primary insertVenda" data-acao="insert">Salvar</button>
+                <button type="button" id="updateVenda" class="btn btn-primary updateVenda" data-acao="update">Alterar</button>
             </div>
         </div>
     </div>
@@ -335,27 +347,28 @@
     <script>
         $(document).ready(function(){
 
-            $('#insertModalVenda').modal('show');
-
             $('#insertModalVenda').on('show.bs.modal', function(){
-                alert("Entrou no Modal");
+                $('.form-horizontal').trigger("reset");
             });
      	
             var Table = $('.dataTables-example').DataTable({
             	"bDestroy": true,
             	"ajax": {
                 	type : "POST",
-	                url: '../includes/ajaxCategorias.php',
+	                url: '../includes/ajaxVendas.php',
 	            },
 	            "columns": [
 	                        { "data": "codigo"},
-	                        { "data": "descricao"},
-	                        { "data": "status" },
+	                        { "data": "data_venda"},
+                            { "data": "cli_desc" },
+                            { "data": "valorOriginal" },
+                            { "data": "valorDesconto" },
+	                        { "data": "valorLiquido" },
 	                        { "data": null, "render": function(data, type, row){
 		                        
-		                        	var btnEdit    = '<button class="btn btn-primary btn-sm updateCategory" type="button" id="btnUpdate" data-acao="update" data-codigo=' + data.codigo + ' data-desc="' + data.descricao + '" data-status=' + data.status + '><i class="fa fa-paste"></i> Alterar</button>';
-		                        	var btnDisable = '<button class="btn btn-danger btn-sm disableCategory" type="button" id="btnDisable" data-acao="disable" data-codigo=' + data.codigo + '><i class="fa fa-times"></i> Desabilitar</button></div>';
-		                        	var btnEnable  = '<button class="btn btn-success btn-sm enableCategory" type="button" id="btnEnable" data-acao="enable" data-codigo=' + data.codigo + '><i class="fa fa-times"></i> Habilitar</button></div>';
+		                        	var btnEdit    = '<button class="btn btn-primary btn-sm updateVenda" type="button" id="btnUpdate" data-acao="update" data-codigo=' + data.codigo + '><i class="fa fa-edit"></i></button>';
+		                        	var btnDisable = '<button class="btn btn-danger btn-sm disableVenda" type="button" id="btnDisable" data-acao="disable" data-codigo=' + data.codigo + '><i class="fa fa-toggle-off"></i></button>';
+		                        	var btnEnable  = '<button class="btn btn-success btn-sm enableVenda" type="button" id="btnEnable" data-acao="enable" data-codigo=' + data.codigo + '><i class="fa fa-toggle-on"></i></button>';
 
 									return btnEdit + '&nbsp&nbsp&nbsp&nbsp' + 
                                            btnDisable + '&nbsp&nbsp&nbsp&nbsp' + 
@@ -364,7 +377,8 @@
 							},
 	                       ],
                        "columnDefs": [
-        		       		          	{"targets": [0,2,3], "class":'text-center'},
+        		       		          	{"targets": [0,1,6], "class":'text-center'},
+                                        {"targets": [3,4,5], "class":'text-right'},
         		                   ],
                        "language": {
      		                "url": "../includes/Portuguese-Brasil.json"
@@ -375,14 +389,16 @@
                        buttons: [
                            {
 
-                               text: 'Adicionar Venda',
+                               text: '<i class="fa fa-pencil-square-o"></i>Adicionar Venda',
                                action: function ( e, dt, node, config ) {
                             	   null; //$('#insertModalCategoria').modal('show');
                                },
                                init: function (dt, node, config) {
                                    $(node).attr('data-acao', 'insert');
                                    $(node).attr('id', 'btnInsert');
-                               }                               
+                                   $(node).removeClass('btn-default');
+                               },
+                               className: 'btn-primary',
                            }
                        ]
 
@@ -392,32 +408,65 @@
                 return n.replace('.', ',').replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
             }
 
+            function atualizaTotais(){
 
-            $('#insertModalVenda tbody #numQuantidade').on('change', function(e){
+                var vValorDesconto = 0;
+                var vValorOriginal = 0;
+                var vSubtotal = 0;
+
+                $('#insertModalVenda tbody #codProdTxt').each(function(index, element){
 
                     $row = $(this).closest('tr');
 
-                    var vQuantidade = $row.find('#numQuantidade').val();
-                    var vValorVenda = $row.find('#valorVenda').val();
-                    console.log(vQuantidade);
-                    console.log(vValorVenda);
-                    var vSubtotal = vValorVenda * vQuantidade;
+                    vValorOriginal  = vValorOriginal + parseFloat($row.find('#numQuantidade').val() * $row.find('#valorVenda').val());
+
+                    vValorDesconto  = vValorDesconto + parseFloat($row.find('#valorDesconto').val());
+
+                    vSubtotal       = vSubtotal + parseFloat($row.find('#valorSubtotal').val());
+
+                });
+
+                $('#insertModalVenda tfoot #totalOriginal').val(vValorOriginal.toFixed(2));
+                $('#insertModalVenda tfoot #totalDesconto').val(vValorDesconto.toFixed(2));
+                $('#insertModalVenda tfoot #totalSubTotal').val(vSubtotal.toFixed(2));
+
+
+            }
+
+             $(document).on('change', '#insertModalVenda tbody #numQuantidade', function(e){
                     
-                    $row.find('#valorSubtotal').val(vSubtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
-
-
-            });
-
-            $('#insertModalVenda tbody #valorDesconto').on('change', function(e){
+                    e.preventDefault();
 
                     $row = $(this).closest('tr');
 
                     var vQuantidade = $row.find('#numQuantidade').val();
                     var vValorVenda = $row.find('#valorVenda').val();
                     var vDescconto  = $row.find('#valorDesconto').val();
-                    var vSubtotal = (vValorVenda) * (vQuantidade) - (vDescconto);
+                    var vSubtotal = parseFloat((vValorVenda) * (vQuantidade) - (vDescconto)).toFixed(2);
                     
-                    $row.find('#valorSubtotal').val(vSubtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
+                    $row.find('#valorSubtotal').val(vSubtotal);
+
+                    atualizaTotais();
+
+
+            });
+
+            $(document).on('change', '#insertModalVenda tbody #valorDesconto', function(e){
+                    
+                    e.preventDefault();
+
+                    $row = $(this).closest('tr');
+
+                    var vQuantidade = $row.find('#numQuantidade').val();
+                    var vValorVenda = $row.find('#valorVenda').val();
+                    var vDescconto  = $row.find('#valorDesconto').val();
+                    $row.find('#valorDesconto').val(parseFloat(vDescconto).toFixed(2));
+                    console.log("vDescconto: "  + vDescconto);
+                    var vSubtotal = parseFloat((vValorVenda) * (vQuantidade) - (vDescconto)).toFixed(2);
+                    
+                    $row.find('#valorSubtotal').val(vSubtotal);
+
+                    atualizaTotais();
 
 
             });
@@ -427,46 +476,57 @@
                 e.preventDefault();
 
                 if($(this).val()){
+
                     $row = $(this).closest('tr');
                     console.log($row);
                     console.log($row.find('#codProdTxt').val());
                     
                     $.post(
+
                         "../includes/ajaxProdutos.php",
                         {acao : "selectId", codigo : $row.find('#codProdTxt').val()},
+
                     ).done(function(data){
+
                         var result = JSON.parse(data);
+
                         if (result.total == 1){
+
+                            var vValorDesconto = 0;
+                            var vSubtotal = 0;
 
                             $.map(result.data, function(val, item){
 
                                 $row.find('#descProdTxt').val(val.descricao);
                                 var vQuantidade = 1;
                                 $row.find('#numQuantidade').val(vQuantidade);
-                                var vValorVenda = val.preco_venda;
-                                $row.find('#valorVenda').val(vValorVenda.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
-                                var vValorDesconto = 0;
-                                $row.find('#valorDesconto').val(vValorDesconto.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
-                                var vSubtotal = vValorVenda * vQuantidade;
-                                $row.find('#valorSubtotal').val(vSubtotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' }));
+                                $row.find('#valorVenda').val(val.preco_venda);
+                                $row.find('#valorDesconto').val(vValorDesconto.toFixed(2));
+                                vSubtotal = parseFloat(val.preco_venda * vQuantidade).toFixed(2);
+                                $row.find('#valorSubtotal').val(vSubtotal);
 
                             });
+
+                            atualizaTotais();
+
                         } else if (result.total == 0) {
+
                             alert("Produto Não Encontrado");
-                            $('#descProdTxt').val(val.descricao);
-                            var vQuantidade = 1;
-                            $('#numQuantidade').val(vQuantidade);
-                            var vValorVenda = val.preco_venda;
-                            $('#valorVenda').val(formataDinheiro(vValorVenda));
-                            $('#valorDesconto').val(formataDinheiro('0.0'));
-                            $('#valorSubtotal').val(vValorVenda*vQuantidade);
-                            $('#codProdTxt').focus();
+
+                            $row.find('#codProdTxt').focus();
+
                         } else {
+
                             alert("Problemas ao Pesquisar o Produto");
+
                         }
                         
                         //$('#descProdTxt').val(data.descricao);
                     });
+                } else {
+
+                    null;
+
                 }
 
 
@@ -481,6 +541,8 @@
                         $row.remove();
                     }
 
+                    atualizaTotais();
+
 
             });
 
@@ -493,7 +555,7 @@
                     vLinha = vLinha + '<td><input type="text" name="valorVenda" id="valorVenda" placeholder="" class="form-control input-sm" readonly="readonly"></td>'
                     vLinha = vLinha + '<td><input type="text" name="valorDesconto" id="valorDesconto" placeholder="" class="form-control input-sm"></td>'
                     vLinha = vLinha + '<td><input type="text" name="valorSubtotal" id="valorSubtotal" placeholder="" class="form-control input-sm" readonly="readonly"></td>'
-                    vLinha = vLinha + '<td><button class="btn btn-danger btn-sm" type="button" id="btnRemoveLinha"></i> X</button></td>'
+                    vLinha = vLinha + '<td align="center"><button class="btn btn-danger btn-sm" type="button" id="btnRemoveLinha"><i class="fa fa-trash"></i></button></td>'
                     vLinha = vLinha + '</tr>';
 
                 $('#insertModalVenda #tblVenda tbody').append(vLinha);
@@ -502,24 +564,25 @@
 
             $('#cliTxt').typeahead({
                 source: [
-                    {"name": "Afghanistan", "code": "AF", "ccn0": "040"},
-                    {"name": "Land Islands", "code": "AX", "ccn0": "050"},
-                    {"name": "Albania", "code": "AL","ccn0": "060"},
-                    {"name": "Algeria", "code": "DZ","ccn0": "070"}
-                ]
-            }); 
+                    {"name": "Cliente 01", "id": "1"},
+                    {"name": "Cliente 02", "id": "2"},
+                ],
+                afterSelect: function(item){
+                    return item;
+                }
+            });
 
             $(".selectFormaPgto").select2({
                 width: "95%",
                 placeholder: "Forma de Pagamento",
-                allowClear: true,
+                //allowClear: true,
                 minimumResultsForSearch: Infinity
             });
 
             $(".selectParcela").select2({
                 width: "95%",
                 placeholder: "Parcela",
-                allowClear: true,
+                //allowClear: true,
                 minimumResultsForSearch: Infinity,
             });
 
@@ -529,29 +592,24 @@
 
                 var acao = $(this).data('acao');
 
-                $('#insertCategory, #updateCategory').hide();
+                $('#insertVenda, #updateVenda').hide();
 
                 $('#codTxt').prop('readonly', true);
 
                 if(acao == 'update'){
 
-                    $('#codTxt').val($(this).data('codigo'));
-                    $('#descTxt').val($(this).attr('data-desc'));
-                    if($(this).attr('data-status') == 'A'){
-                        $('#statusCheckbox').prop('checked', true);
-                    } else {
-                        $('#statusCheckbox').prop('checked', false);
-                    }
+                    $('#codTxt').attr('value',$(this).data('codigo'));
+                    $('#cliTxt').attr('value',$(this).data('codigo'));
 
-                    $('#updateCategory').show();
+                    $('#updateVenda').show();
 
                 } else {
 
-                    $('#descTxt').val('');
+                    $('#descTxt').val('A');
 
                     $('#codTxt').val('');
 
-                    $('#insertCategory').show();
+                    $('#insertVenda').show();
 
                 }
 
@@ -560,29 +618,67 @@
 
             });
 
-            $('#insertCategory, #updateCategory').on('click', function (e) { 
+            $('#insertVenda, #updateVenda').on('click', function (e) { 
 
                 e.preventDefault();
 
-                var acao, codigo, nome, status;
+                var vCount = 0
 
-                acao 	= $(this).data('acao') ;
-                codigo 	= $('#codTxt');
-                nome 	= $('#descTxt');
-                status 	= $('#statusCheckbox').prop('checked') ? 'A' : 'I';
+                var acao, codigo, vDataParcela, vCliente;
 
-                if(!nome.val()){
-                    alert("A descrição é obrigatória");
-                    nome.focus();
+                acao            = $(this).data('acao') ;
+                codigo 	        = $('#codTxt');
+                vDataParcela    = $('#dtParcela');
+                vClientes       = $('#cliTxt');
+                formaPagamento  = $('#selectFormaPgto');
+                totalParcelas   = $('#selectParcela');
+                dataParcela     = $('#dtParcela');
+                totalOriginal   = $('#totalOriginal');
+                totalDesconto   = $('#totalDesconto');
+                totalVenda      = $('#totalSubTotal');
+
+                if(!vDataParcela.val()){
+                    alert("A Data da Primeira Parcela é obrigatória");
+                    vDataParcela.focus();
+                    return;
+                }
+
+                vClientesTH = vClientes.typeahead("getActive");
+
+                if(!vClientesTH.id){
+                    alert("Cliente é obrigatório");
+                    vClientes.focus();
+                    return;
+                }
+
+                $('#insertModalVenda #codProdTxt').each(function(index, element){
+                    if($(element).val()){
+                        vCount++;
+                    }
+                });
+
+                if(!vCount){
+                    alert("Informe ao menos 1 produto!");
                     return;
                 }
 
                 $.post(
-                        "../includes/ajaxCategorias.php",
-                        {"acao" : acao, "codigo" : codigo.val(), "nome": nome.val(), "status": status}
+                        "../includes/ajaxVendas.php",
+                        {
+                            "acao" : acao, 
+                            "codigo" : codigo.val(), 
+                            "formaPagamento": formaPagamento.val(),
+                            "totalParcelas":totalParcelas.val(),
+                            "dataParcela": dataParcela.val(),
+                            "cliente": vClientesTH.id, 
+                            "totalOriginal": totalOriginal.val(),
+                            "totalDesconto": totalDesconto.val(),
+                            "totalVenda": totalVenda.val(),
+                            "status": 'A'
+                        }
                 ).done(function(data){
-                    alert(data);
-                    $('#insertModalCategoria').modal('hide');
+                    //alert(data);
+                    $('#insertModalVenda').modal('hide');
                     Table.ajax.reload(null, false);
                 });
 
